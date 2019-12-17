@@ -1,44 +1,5 @@
 #include "PolyPhaseSort.h"
 
-void print_file(const string& file_name) {
-	fstream f;
-	f.open(file_name, ios::in | ios::binary);
-
-	Record i;
-	while (true) {
-		f.read((char*)&i, sizeof(Record));
-		if (f.eof()) {
-			break;
-		}
-
-		cout << i.key << endl;
-
-	}
-	f.close();
-}
-
-void generate_file(int n_records, const string& file_name)
-{
-	mt19937 generator(time(0));
-
-	fstream f0;
-	f0.open(file_name, ios::out | ios::binary | ios::trunc);
-
-	for (int i = 0; i < n_records; i++) {
-		Record out_rec;
-		out_rec.key = generator() % 100000;
-
-		for (int j = 0; j < DATA_SIZE - 1; j++) {
-			out_rec.data[j] = generator() % ('z' - 'a') + 'a';
-		}
-		out_rec.data[DATA_SIZE - 1] = '\0';
-
-		f0.write((const char*)&out_rec, sizeof(Record));
-	}
-
-	f0.close();
-}
-
 void select(vector<int>& a, vector<int>& d, const int& n_files, int& j, int& level)
 {
 	if (d[j] < d[j + 1]) {
@@ -58,7 +19,7 @@ void select(vector<int>& a, vector<int>& d, const int& n_files, int& j, int& lev
 	d[j]--;
 }
 
-void poly_phase_sort(const string& file_name, const unsigned int& n_files)
+void poly_phase_sort(const string& file_name, const unsigned int& n_files, string& result)
 {
 	if (n_files < 3) {
 		return;
@@ -169,28 +130,28 @@ void poly_phase_sort(const string& file_name, const unsigned int& n_files)
 
 				do {
 					Record min = buffer[ta[0]];
-					int save_index = 0;
+					int index_min = 0;
 					
 					for (int i = 1; i < ao; i++) {
 						if (min.key > buffer[ta[i]].key) {
 							min = buffer[ta[i]];
-							save_index = i;
+							index_min = i;
 						}
 					}
 
-					f[ta[save_index]].read((char*)&buffer[ta[save_index]], sizeof(Record));
+					f[ta[index_min]].read((char*)&buffer[ta[index_min]], sizeof(Record));
 
 					f[t[n_files - 1]].write((char*)&min, sizeof(Record));
 
-					if (f[ta[save_index]].eof()) {
+					if (f[ta[index_min]].eof()) {
 						af--; ao--;
 
-						swap(ta[save_index], ta[ao]);
+						swap(ta[index_min], ta[ao]);
 						swap(ta[ao], ta[af]);
 					}
-					else if (min.key > buffer[ta[save_index]].key) {
+					else if (min.key > buffer[ta[index_min]].key) {
 						ao--;
-						swap(ta[save_index], ta[ao]);
+						swap(ta[index_min], ta[ao]);
 					}
 
 				} while (ao > 0);
@@ -227,5 +188,5 @@ void poly_phase_sort(const string& file_name, const unsigned int& n_files)
 		f[i].close();
 	}
 
-	cout << "f_" + to_string(t[0] + 1) << endl;
+	result = "f_" + to_string(t[0] + 1);
 }

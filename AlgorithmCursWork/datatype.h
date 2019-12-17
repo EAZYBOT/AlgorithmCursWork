@@ -4,5 +4,5 @@
 struct Record
 {
 	int key = -1;
-	char data[196];
+	char data[DATA_SIZE];
 };

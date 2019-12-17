@@ -124,11 +124,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PolySort.cpp" />
+    <ClCompile Include="PolyPhaseSort.cpp" />
+    <ClCompile Include="TestModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="datatype.h" />
-    <ClInclude Include="PolySort.h" />
+    <ClInclude Include="PolyPhaseSort.h" />
+    <ClInclude Include="TestModule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
